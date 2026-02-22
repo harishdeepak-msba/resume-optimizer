@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Optimizer - Get Past ATS Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --accent: #FF3366;
+            --bg: #FAFBFC;
+            --surface: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #666666;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.03;
+        }
+
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '🤖';
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 102, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+
+        .features h2 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .features-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,242,245,1) 100%);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 6rem 0;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 0;
+        }
+
+        .how-it-works h2 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            position: relative;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+        }
+
+        .step h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* App Preview */
+        .app-preview {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+
+        .app-preview h2 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .iframe-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            border: 8px solid white;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+
+        /* CTA Section */
+        .final-cta {
+            padding: 8rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .final-cta h2 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .final-cta p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+            position: relative;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            background: #1A1A1A;
+            color: white;
+        }
+
+        footer p {
+            opacity: 0.7;
+        }
+
+        /* Launch Section */
+        .launch-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .launch-card {
+            background: white;
+            padding: 4rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .launch-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .launch-card h3 {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .launch-card p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .launch-btn {
+            font-size: 1.3rem;
+            padding: 1.5rem 4rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .features-list {
+            text-align: left;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 1.1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Screenshot Preview */
+        .screenshot-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        .browser-chrome {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        .dots span:nth-child(1) { background: #ff5f56; }
+        .dots span:nth-child(2) { background: #ffbd2e; }
+        .dots span:nth-child(3) { background: #27c93f; }
+
+        .url-bar {
+            flex: 1;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Cabinet Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .preview-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 0 0 12px 12px;
+            min-height: 400px;
+        }
+
+        .preview-header {
+            height: 60px;
+            background: linear-gradient(90deg, #e0e7ff 0%, #f0f4ff 100%);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .preview-sections {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .preview-section {
+            height: 80px;
+            background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Responsive */
+                /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .launch-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .launch-card {
+                padding: 2rem;
+            }
+
+            .screenshot-preview {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">ResumeAI</a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#try-it">Try It Now</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Beat ATS Systems.<br>Land More Interviews.</h1>
+            <p>AI-powered resume optimization using GPT-4o, Sentence-BERT, and advanced NLP. Get past applicant tracking systems and into human hands.</p>
+            <div class="cta-buttons">
+                <a href="#try-it" class="btn btn-primary">Optimize Your Resume</a>
+                <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Powered by Advanced AI</h2>
+            <p class="features-subtitle">Three cutting-edge models working together for your success</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3>GPT-4o Intelligence</h3>
+                    <p>Context-aware analysis that understands nuance. Get personalized, actionable suggestions tailored to your specific resume and target role.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🧠</span>
+                    <h3>Semantic Matching</h3>
+                    <p>Sentence-BERT embeddings go beyond keyword matching. We understand meaning and relevance, not just word frequency.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔍</span>
+                    <h3>Entity Extraction</h3>
+                    <p>spaCy NER identifies skills, companies, technologies, and certifications automatically. Never miss a critical detail.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>ATS Compatibility</h3>
+                    <p>Optimized formatting that passes applicant tracking systems. Clean, professional output that recruiters actually see.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">💡</span>
+                    <h3>Smart Suggestions</h3>
+                    <p>Specific, actionable improvements. Not generic advice—real insights based on your experience and target job.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">💾</span>
+                    <h3>Multiple Formats</h3>
+                    <p>Download as Word (.docx) or Text (.txt). Professional formatting ready to send to employers immediately.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>85%</h3>
+                    <p>Average ATS Score Improvement</p>
+                </div>
+                <div class="stat-item">
+                    <h3>3.2x</h3>
+                    <p>More Interview Callbacks</p>
+                </div>
+                <div class="stat-item">
+                    <h3>< 1¢</h3>
+                    <p>Cost Per Analysis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Resume</h3>
+                    <p>Paste your resume text or upload PDF, DOCX, or TXT file. Works with any format.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Add Job Description</h3>
+                    <p>Paste the complete job posting you're targeting. The more detail, the better.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>AI Analysis</h3>
+                    <p>GPT-4o analyzes fit, identifies gaps, and generates personalized suggestions in seconds.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Download & Apply</h3>
+                    <p>Get your optimized resume in Word or Text format. Ready to send immediately.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="try-it" class="app-preview">
+        <div class="container">
+            <h2>Try It Now - Free</h2>
+            <div class="launch-container">
+                <div class="launch-card">
+                    <div class="launch-icon">🚀</div>
+                    <h3>Launch AI Resume Optimizer</h3>
+                    <p>Opens in a new tab with full functionality</p>
+                    <a href="https://huggingface.co/spaces/hdeepak/resume-optimizer" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="btn btn-primary launch-btn">
+                        Open Optimizer →
+                    </a>
+                    <div class="features-list">
+                        <div class="feature-item">✓ GPT-4o powered analysis</div>
+                        <div class="feature-item">✓ Instant ATS score</div>
+                        <div class="feature-item">✓ Download as Word/Text</div>
+                        <div class="feature-item">✓ 100% free to try</div>
+                    </div>
+                </div>
+                
+                <div class="screenshot-preview">
+                    <div class="browser-chrome">
+                        <div class="dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="url-bar">huggingface.co/spaces/hdeepak/resume-optimizer</div>
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-header"></div>
+                        <div class="preview-sections">
+                            <div class="preview-section"></div>
+                            <div class="preview-section"></div>
+                            <div class="preview-section"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Land Your Dream Job?</h2>
+            <p>Join thousands of job seekers who've optimized their resumes with AI</p>
+            <a href="#try-it" class="btn btn-primary" style="background: white; color: var(--primary);">Get Started Free</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AI Resume Optimizer. Powered by GPT-4o, Sentence-BERT & spaCy.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Built with ❤️ for job seekers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
