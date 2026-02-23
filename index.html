@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Optimizer - Beat ATS Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text: #18181b;
+            --text-light: #71717a;
+            --border: #e4e4e7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        header { padding: 1.5rem 0; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--primary); text-decoration: none; }
+        .hero { padding: 4rem 0 2rem; text-align: center; }
+        .hero h1 { font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1rem; }
+        .hero .highlight { color: var(--primary); }
+        .hero p { font-size: 1.25rem; color: var(--text-light); max-width: 600px; margin: 0 auto 2rem; }
+        .hero-cta-button { background: var(--primary); color: white; padding: 1.25rem 3rem; border-radius: 12px; text-decoration: none; font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.25rem; display: inline-block; transition: all 0.3s; }
+        .hero-cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3); }
+        .features { padding: 4rem 0; background: white; }
+        .features h2 { font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 900; text-align: center; margin-bottom: 3rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .feature-card { text-align: center; padding: 2rem; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-family: 'Fraunces', serif; font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .app-section { padding: 3rem 0; }
+        .optimizer-card { background: var(--surface); border-radius: 24px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08); max-width: 1200px; margin: 0 auto; }
+        .input-section { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        textarea { font-family: 'DM Sans', sans-serif; padding: 1.25rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; resize: vertical; min-height: 300px; transition: all 0.3s; }
+        textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        .file-upload { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 1rem; }
+        .file-upload:hover { border-color: var(--primary); background: rgba(37, 99, 235, 0.02); }
+        .file-upload input { display: none; }
+        .analyze-button { background: var(--primary); color: white; font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; padding: 1.25rem 3rem; border: none; border-radius: 12px; cursor: pointer; width: 100%; transition: all 0.3s; }
+        .analyze-button:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3); }
+        .analyze-button:disabled { background: var(--border); cursor: not-allowed; }
+        .loading { display: none; text-align: center; padding: 2rem; }
+        .loading.active { display: block; }
+        .spinner { border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .results { display: none; margin-top: 3rem; }
+        .results.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .score-card { background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%); color: white; padding: 3rem; border-radius: 16px; text-align: center; margin-bottom: 2rem; }
+        .score-number { font-family: 'Fraunces', serif; font-size: 5rem; font-weight: 900; line-height: 1; }
+        .score-label { font-size: 1.25rem; opacity: 0.9; margin-top: 0.5rem; }
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .result-card { background: white; padding: 2rem; border-radius: 16px; border: 2px solid var(--border); }
+        .result-card h3 { font-family: 'Fraunces', serif; font-size: 1.5rem; margin-bottom: 1rem; }
+        .keyword-tag { display: inline-block; padding: 0.5rem 1rem; background: rgba(37, 99, 235, 0.1); color: var(--primary); border-radius: 20px; margin: 0.25rem; font-size: 0.9rem; }
+        .keyword-tag.missing { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+        .suggestion-item { padding: 1rem; background: var(--bg); border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid var(--accent); }
+        .download-buttons { display: flex; gap: 1rem; margin-top: 2rem; }
+        .btn { flex: 1; padding: 1rem 2rem; border: none; border-radius: 12px; font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); }
+        footer { padding: 3rem 0; text-align: center; background: var(--text); color: white; margin-top: 4rem; }
+        .error-message { background: rgba(239, 68, 68, 0.1); color: var(--error); padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; }
+        .error-message.active { display: block; }
+        @media (max-width: 768px) { .input-section, .download-buttons, .results-grid { grid-template-columns: 1fr; } .download-buttons { flex-direction: column; } }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</head>
+<body>
+    <header><div class="container"><nav><a href="#" class="logo">🤖 ResumeAI</a></nav></div></header>
+    <section class="hero">
+        <div class="container">
+            <h1>Beat ATS Systems.<br><span class="highlight">Land More Interviews.</span></h1>
+            <p>AI-powered resume optimization using GPT-4o. Get instant feedback and download your optimized resume.</p>
+            <div style="margin-top: 2rem;"><a href="#optimizer" class="hero-cta-button">🚀 Try It Free</a></div>
+        </div>
+    </section>
+    <section class="features">
+        <div class="container">
+            <h2>Powered by Advanced AI</h2>
+            <div class="features-grid">
+                <div class="feature-card"><div class="feature-icon">🤖</div><h3>GPT-4o Intelligence</h3><p>Context-aware analysis with personalized suggestions</p></div>
+                <div class="feature-card"><div class="feature-icon">🎯</div><h3>ATS Optimized</h3><p>Formatting that passes applicant tracking systems</p></div>
+                <div class="feature-card"><div class="feature-icon">⚡</div><h3>Instant Results</h3><p>Get your analysis in under 15 seconds</p></div>
+                <div class="feature-card"><div class="feature-icon">💾</div><h3>Multiple Formats</h3><p>Download as Word or Text, ready to send</p></div>
+            </div>
+        </div>
+    </section>
+    <section class="app-section" id="optimizer">
+        <div class="container">
+            <h2 style="font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 900; text-align: center; margin-bottom: 3rem;">Try It Now - Free</h2>
+            <div class="optimizer-card">
+                <div class="input-section">
+                    <div class="input-group">
+                        <label><span style="font-size: 1.5rem;">📄</span> Your Resume</label>
+                        <div class="file-upload" id="fileUploadArea" onclick="document.getElementById('resumeFile').click()">
+                            <input type="file" id="resumeFile" accept=".pdf,.docx,.txt">
+                            <div class="file-upload-text" id="uploadText">📎 Click to upload PDF, DOCX, or TXT<br><small style="color: var(--text-light); margin-top: 0.5rem; display: block;">Or paste your resume below</small></div>
+                        </div>
+                        <textarea id="resumeText" placeholder="Paste your resume text here...
+
+Include:
+• Work experience
+• Education
+• Skills
+• Achievements"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label><span style="font-size: 1.5rem;">💼</span> Job Description</label>
+                        <textarea id="jobDescription" placeholder="Paste the complete job description here...
+
+Include:
+• Job requirements
+• Required skills
+• Responsibilities
+• Qualifications" style="min-height: 410px;"></textarea>
+                    </div>
+                </div>
+                <button class="analyze-button" onclick="analyzeResume()"><span>🤖 Analyze with AI</span></button>
+                <div class="error-message" id="errorMessage"></div>
+                <div class="loading" id="loading"><div class="spinner"></div><p>Analyzing your resume with GPT-4o... This takes about 10-15 seconds</p></div>
+                <div class="results" id="results">
+                    <div class="score-card"><div class="score-number" id="scoreNumber">85</div><div class="score-label">ATS Compatibility Score</div></div>
+                    <div class="results-grid">
+                        <div class="result-card"><h3>✅ Matched Keywords</h3><div id="matchedKeywords"></div></div>
+                        <div class="result-card"><h3>❌ Missing Keywords</h3><div id="missingKeywords"></div></div>
+                    </div>
+                    <div class="result-card"><h3>💡 AI Suggestions</h3><div id="suggestions"></div></div>
+                    <div class="download-buttons">
+                        <button class="btn btn-primary" onclick="downloadWord()">📄 Download as Word</button>
+                        <button class="btn btn-secondary" onclick="downloadText()">📝 Download as Text</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">© 2025 AI Resume Optimizer. Powered by GPT-4o & Advanced NLP.</p>
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 1.5rem;">
+                <p style="font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: #60a5fa;">🎓 Group Project in AI by TEAM AKATSUKI</p>
+                <p style="font-size: 1rem; opacity: 0.9;">Harish Deepak • Yadu Chandramohanan • Muniswamappa Devaraj Divya • Rishabh</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        var analysisResult = null;
+        document.getElementById('resumeFile').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var fileName = file.name;
+                var fileType = file.name.split('.').pop().toLowerCase();
+                
+                document.getElementById('uploadText').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; gap: 1rem;"><span>✅ ' + fileName + '</span><button onclick="clearFile(event)" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">✕ Remove</button></div><div style="margin-top: 0.5rem; color: var(--text-light); font-size: 0.9rem;">Extracting text...</div>';
+                
+                if (fileType === 'pdf') {
+                    extractPDFText(file);
+                } else if (fileType === 'txt') {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('resumeText').value = event.target.result;
+                        document.getElementById('uploadText').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; gap: 1rem;"><span>✅ ' + fileName + ' (Text extracted)</span><button onclick="clearFile(event)" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">✕ Remove</button></div>';
+                    };
+                    reader.readAsText(file);
+                } else {
+                    document.getElementById('uploadText').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; gap: 1rem;"><span>✅ ' + fileName + '</span><button onclick="clearFile(event)" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">✕ Remove</button></div><div style="margin-top: 0.5rem; color: #f59e0b; font-size: 0.9rem;">⚠️ .docx files need manual copy-paste. Please paste the text below.</div>';
+                }
+            }
+        });
+        
+        function extractPDFText(file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var typedarray = new Uint8Array(event.target.result);
+                pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+                    var maxPages = pdf.numPages;
+                    var countPromises = [];
+                    for (var i = 1; i <= maxPages; i++) {
+                        var page = pdf.getPage(i);
+                        countPromises.push(page.then(function(page) {
+                            return page.getTextContent().then(function(textContent) {
+                                return textContent.items.map(function(item) { return item.str; }).join(' ');
+                            });
+                        }));
+                    }
+                    Promise.all(countPromises).then(function(texts) {
+                        var fullText = texts.join('
+
+');
+                        document.getElementById('resumeText').value = fullText;
+                        document.getElementById('uploadText').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; gap: 1rem;"><span>✅ ' + file.name + ' (' + maxPages + ' pages extracted)</span><button onclick="clearFile(event)" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">✕ Remove</button></div>';
+                    });
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        
+        function clearFile(event) {
+            event.stopPropagation();
+            document.getElementById('resumeFile').value = '';
+            document.getElementById('resumeText').value = '';
+            document.getElementById('uploadText').innerHTML = '📎 Click to upload PDF, DOCX, or TXT<br><small style="color: var(--text-light); margin-top: 0.5rem; display: block;">Or paste your resume below</small>';
+        }
+        function analyzeResume() {
+            var resumeText = document.getElementById('resumeText').value;
+            var jobDescription = document.getElementById('jobDescription').value;
+            var errorMessage = document.getElementById('errorMessage');
+            
+            if (!resumeText.trim()) {
+                errorMessage.textContent = '❌ Please paste your resume text';
+                errorMessage.classList.add('active');
+                return;
+            }
+            if (!jobDescription.trim()) {
+                errorMessage.textContent = '❌ Please paste the job description';
+                errorMessage.classList.add('active');
+                return;
+            }
+            
+            errorMessage.classList.remove('active');
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.querySelector('.analyze-button').disabled = true;
+            
+            // Call HuggingFace Space Gradio API
+            callGradioAPI(resumeText, jobDescription);
+        }
+        
+        function callGradioAPI(resumeText, jobDesc) {
+            var errorMessage = document.getElementById('errorMessage');
+            
+            // Gradio API endpoint
+            var apiUrl = 'https://hdeepak-resume-optimizer.hf.space/run/predict';
+            
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data: [resumeText, jobDesc]
+                })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('API call failed');
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                // Parse the result from Gradio
+                if (result && result.data && result.data.length > 0) {
+                    var analysisData = result.data[0];
+                    parseAndDisplayResults(analysisData);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                errorMessage.textContent = '⚠️ Could not connect to AI service. Showing demo results instead.';
+                errorMessage.style.background = 'rgba(245, 158, 11, 0.1)';
+                errorMessage.style.color = '#f59e0b';
+                errorMessage.classList.add('active');
+                showDemoResults();
+            })
+            .finally(function() {
+                document.getElementById('loading').classList.remove('active');
+                document.querySelector('.analyze-button').disabled = false;
+            });
+        }
+        
+        function parseAndDisplayResults(data) {
+            // Extract results from the API response
+            // Adjust this based on your actual API response structure
+            var result = {
+                score: data.score || 78,
+                matchedKeywords: data.matched_keywords || data.matchedKeywords || [],
+                missingKeywords: data.missing_keywords || data.missingKeywords || [],
+                suggestions: data.suggestions || [],
+                optimizedResume: data.optimized_resume || data.optimizedContent || ''
+            };
+            
+            analysisResult = result;
+            displayResults(result);
+            
+            // Show success message
+            var errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = '✅ Analysis complete! GPT-4o has optimized your resume.';
+            errorMessage.style.background = 'rgba(16, 185, 129, 0.1)';
+            errorMessage.style.color = '#10b981';
+            errorMessage.classList.add('active');
+        }
+        function showDemoResults() {
+            var demoResult = {
+                score: 78,
+                matchedKeywords: ['Python', 'JavaScript', 'React', 'Node.js', 'AWS', 'Docker'],
+                missingKeywords: ['Kubernetes', 'TypeScript', 'GraphQL', 'CI/CD', 'Terraform'],
+                suggestions: [
+                    'Add quantified achievements with percentages and metrics',
+                    'Include specific technologies: Kubernetes, TypeScript, GraphQL',
+                    'Emphasize leadership experience with team size and scope',
+                    'Add industry-relevant certifications if available',
+                    'Use ATS-friendly formatting with clear section headers'
+                ]
+            };
+            displayResults(demoResult);
+        }
+        function displayResults(result) {
+            document.getElementById('scoreNumber').textContent = result.score || 0;
+            var matchedDiv = document.getElementById('matchedKeywords');
+            matchedDiv.innerHTML = result.matchedKeywords && result.matchedKeywords.length > 0 ? result.matchedKeywords.map(function(kw) { return '<span class="keyword-tag">' + kw + '</span>'; }).join('') : '<p style="color: var(--text-light);">No matched keywords found</p>';
+            var missingDiv = document.getElementById('missingKeywords');
+            missingDiv.innerHTML = result.missingKeywords && result.missingKeywords.length > 0 ? result.missingKeywords.map(function(kw) { return '<span class="keyword-tag missing">' + kw + '</span>'; }).join('') : '<p style="color: var(--text-light);">No missing keywords</p>';
+            var suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = result.suggestions && result.suggestions.length > 0 ? result.suggestions.map(function(s) { return '<div class="suggestion-item">' + s + '</div>'; }).join('') : '<p style="color: var(--text-light);">No suggestions available</p>';
+            document.getElementById('results').classList.add('active');
+        }
+        function downloadWord() {
+            var resumeText = document.getElementById('resumeText').value;
+            var htmlContent = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Calibri,Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px}h1{color:#2563eb;border-bottom:3px solid #2563eb;padding-bottom:10px}h2{color:#1e40af;margin-top:30px}.score{font-size:48px;color:#10b981;font-weight:bold;text-align:center;padding:20px;background:#f0fdf4;border-radius:10px}.keyword{display:inline-block;background:#dbeafe;color:#1e40af;padding:5px 15px;margin:5px;border-radius:15px}.missing{background:#fee2e2;color:#991b1b}.suggestion{background:#fef3c7;padding:10px 15px;margin:10px 0;border-left:4px solid #f59e0b}</style></head><body><h1>🤖 AI Resume Optimization Report</h1><p><strong>Generated by:</strong> GPT-4o AI Resume Optimizer</p><p><strong>Date:</strong> ' + new Date().toLocaleDateString() + '</p><div class="score">ATS Score: ' + (analysisResult ? analysisResult.score : 0) + '%</div><h2>✅ Matched Keywords</h2>';
+            if (analysisResult && analysisResult.matchedKeywords) {
+                analysisResult.matchedKeywords.forEach(function(kw) { htmlContent += '<span class="keyword">' + kw + '</span>'; });
+            }
+            htmlContent += '<h2>❌ Missing Keywords to Add</h2>';
+            if (analysisResult && analysisResult.missingKeywords) {
+                analysisResult.missingKeywords.forEach(function(kw) { htmlContent += '<span class="keyword missing">' + kw + '</span>'; });
+            }
+            htmlContent += '<h2>💡 Improvement Suggestions</h2>';
+            if (analysisResult && analysisResult.suggestions) {
+                analysisResult.suggestions.forEach(function(s, i) { htmlContent += '<div class="suggestion">' + (i + 1) + '. ' + s + '</div>'; });
+            }
+            htmlContent += '<h2>📄 Your Original Resume</h2><div style="white-space:pre-wrap;font-family:monospace;background:#f9fafb;padding:20px;border-radius:5px">' + resumeText.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div></body></html>';
+            htmlContent += '<h2>📄 OPTIMIZED RESUME (90%+ ATS Target)</h2>';
+            if (analysisResult) {
+                var optimizedResume = generateOptimizedResume(resumeText, '', analysisResult);
+                htmlContent += '<div style="white-space:pre-wrap;font-family:monospace;background:#e0f2fe;padding:20px;border-radius:5px;border:2px solid #0ea5e9">' + optimizedResume.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>';
+            }
+            htmlContent += '</body></html>';
+            var blob = new Blob([htmlContent], { type: 'application/msword' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume_optimized_report.doc';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        function downloadText() {
+            var resumeText = document.getElementById('resumeText').value;
+            var optimizedContent = '======================================================================\n  AI-POWERED RESUME OPTIMIZATION REPORT\n  Powered by GPT-4o\n======================================================================\n\n';
+            if (analysisResult) {
+                optimizedContent += 'ATS COMPATIBILITY SCORE: ' + analysisResult.score + '%\n\n';
+                optimizedContent += '✅ MATCHED KEYWORDS:\n';
+                if (analysisResult.matchedKeywords && analysisResult.matchedKeywords.length > 0) {
+                    analysisResult.matchedKeywords.forEach(function(kw, i) { optimizedContent += '   ' + (i + 1) + '. ' + kw + '\n'; });
+                } else {
+                    optimizedContent += '   None found\n';
+                }
+                optimizedContent += '\n❌ MISSING CRITICAL KEYWORDS:\n';
+                if (analysisResult.missingKeywords && analysisResult.missingKeywords.length > 0) {
+                    analysisResult.missingKeywords.forEach(function(kw, i) { optimizedContent += '   ' + (i + 1) + '. ' + kw + '\n'; });
+                } else {
+                    optimizedContent += '   None\n';
+                }
+                optimizedContent += '\n💡 AI SUGGESTIONS FOR IMPROVEMENT:\n';
+                if (analysisResult.suggestions && analysisResult.suggestions.length > 0) {
+                    analysisResult.suggestions.forEach(function(s, i) { optimizedContent += '   ' + (i + 1) + '. ' + s + '\n'; });
+                } else {
+                    optimizedContent += '   No suggestions\n';
+                }
+            }
+            optimizedContent += '\n======================================================================\n  YOUR ORIGINAL RESUME\n======================================================================\n\n';
+            optimizedContent += resumeText;
+            var blob = new Blob([optimizedContent], { type: 'text/plain' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume_optimized_report.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
